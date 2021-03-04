@@ -59,8 +59,8 @@ title:
 
 [//]: # ( NOTE: EDIT THIS LINKS WITH YOUR REPO DETAILS )
 
-- [Project Repository](https://github.com/cepdnaclk/repository-name)
-- [Project Page](https://cepdnaclk.github.io/repository-name)
+- [Project Repository](https://github.com/cepdnaclk/Real-Time-Data-processing-and-AI-for-Distributed-IoT)
+- [Project Page](https://cepdnaclk.github.io/Real-Time-Data-processing-and-AI-for-Distributed-IoT)
 - [Department of Computer Engineering](http://www.ce.pdn.ac.lk/)
 - [University of Peradeniya](https://eng.pdn.ac.lk/)
 
