@@ -2,25 +2,25 @@
    "title":"This is the title of the project",
    "team":[
       {
-         "name":"Team Member Name 1",
-         "email":"email@eng.pdn.ac.lk",
-         "eNumber":"E/yy/xxx",
+         "name":"Rajitha Opanayaka",
+         "email":"e15246@eng.pdn.ac.lk",
+         "eNumber":"E/15/246",
          "github_profile":"#",
          "linkedin_profile":"#",
          "researchgate_profile":"#"
       },
       {
-         "name":"Team Member Name 2",
+         "name":"Amila Weerasinghe",
          "email":"email@eng.pdn.ac.lk",
-         "eNumber":"E/yy/xxx",
+         "eNumber":"E/15/385",
          "github_profile":"#",
          "linkedin_profile":"#",
          "researchgate_profile":"#"
       },
       {
-         "name":"Team Member Name 3",
+         "name":"Rashmi Thilakarathne",
          "email":"email@eng.pdn.ac.lk",
-         "eNumber":"E/yy/xxx",
+         "eNumber":"E/15/363",
          "github_profile":"#",
          "linkedin_profile":"#",
          "researchgate_profile":"#"
@@ -28,14 +28,14 @@
    ],
    "supervisors":[
       {
-         "name":"Dr. Supervisor 1",
-         "email":"email@eng.pdn.ac.lk",
+         "name":"Dr. Upul Jayasinghe",
+         "email":"upuljm@eng.pdn.ac.lk",
          "linkedin_profile":"",
          "researchgate_profile":""
       },
       {
-         "name":"Dr. Supervisor 2",
-         "email":"email@eng.pdn.ac.lk",
+         "name":"Dr. Damayanthi Herath",
+         "email":"damayanthiherath@eng.pdn.ac.lk",
          "linkedin_profile":"",
          "researchgate_profile":""
       }
