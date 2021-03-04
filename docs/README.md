@@ -3,8 +3,8 @@ layout: home
 permalink: index.html
 
 # Please update this with your repository name and title
-repository-name: eYY-4yp-project-template
-title:
+repository-name: e15-4yp-Real-Time-Data-processing-and-AI-for-Distributed-IoT
+title: Real-Time Data processing and AI for Distributed IoT
 ---
 
 [comment]: # "This is the standard layout for the project, but you can clean this and use your own template"
