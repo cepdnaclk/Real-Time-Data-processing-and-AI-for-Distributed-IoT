@@ -9,7 +9,7 @@ title: Real-Time Data processing and AI for Distributed IoT
 
 [comment]: # "This is the standard layout for the project, but you can clean this and use your own template"
 
-# Project Title
+# Real-Time Data processing and AI for Distributed IoT
 
 #### Team
 
