@@ -14,13 +14,13 @@ title: Real-Time Data processing and AI for Distributed IoT
 #### Team
 
 - E/15/246,Rajitha Opanayaka, [email](mailto:rajithaopanayaka.ro@gmail.com)
-- E/15/385,Amila Weerasinghe , [email](mailto:amilaweerasinghe677@gmail.com)
+- E/15/385,Amila Weerasinghe, [email](mailto:amilaweerasinghe677@gmail.com)
 - E/15/363, Rashmi Thilakarathne, [email](mailto:ireshe1996@gmail.com)
 
 #### Supervisors
 
 - Dr. Upul Jayasinghe, [email](mailto:upuljm@eng.pdn.ac.lk)
-- Dr. Damayanthi Herath , [email](mailto:damayanthiherath@eng.pdn.ac.lk)
+- Dr. Damayanthi Herath, [email](mailto:damayanthiherath@eng.pdn.ac.lk)
 
 #### Table of content
 
@@ -62,6 +62,34 @@ techniques.
 
 ## Methodology
 
+#### Im2col Technique
+In vectorization input matrices transform into a vector
+representation where it enables the vector operations instead of scalar operations on the input data. We used vectorization
+techniques in the convolution and pooling layers where we
+use im2col technique to implement the vectorization. As
+shown in figure 1 given the input matrix we take each window
+and flatten them as columns and stack them as columns in a
+matrix. Kernels are reshaped into rows then apply the matrix
+multiplication between the row and column matrices.
+
+#### Computation Offloading
+Even though the horizontal distribution of computation
+improves the performance, sometimes it may not be enough to
+address the real time constraints. Servers have more resources
+than the raspberry pi devices. So instead of doing the computa-
+tion with limited resources, computation migration can be used
+to address the real time constraints. In vertical distribution,
+servers can execute the given task much faster than the limited
+resource device. Even though there is an overhead in the
+communication between the server and the node. Policies can
+be used to determine whether to offload the computation or
+perform the computation locally. Network bandwidth, node
+processing power and server processing power and the amount
+of data that transfer between the server node and limited
+resource node can be used to define a policy.
+Raspberry pies also have a limited amount of memory. So
+the memory consumption also needs to be considered in the
+offloading decisions.
 
 ## Experiment Setup and Implementation
 
@@ -82,7 +110,7 @@ techniques.
 [//]: # ( NOTE: EDIT THIS LINKS WITH YOUR REPO DETAILS )
 
 - [Project Repository](https://github.com/cepdnaclk/Real-Time-Data-processing-and-AI-for-Distributed-IoT)
-- [Project Page](https://cepdnaclk.github.io/Real-Time-Data-processing-and-AI-for-Distributed-IoT)
+- [Project Page](https://cepdnaclk.github.io/e15-4yp-Real-Time-Data-processing-and-AI-for-Distributed-IoT/)
 - [Department of Computer Engineering](http://www.ce.pdn.ac.lk/)
 - [University of Peradeniya](https://eng.pdn.ac.lk/)
 
