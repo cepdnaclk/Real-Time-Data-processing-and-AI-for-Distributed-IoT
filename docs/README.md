@@ -63,6 +63,9 @@ techniques.
 ## Methodology
 
 #### Im2col Technique
+
+<img src="images/vec.png" width="250" height="200">
+
 In vectorization input matrices transform into a vector
 representation where it enables the vector operations instead of scalar operations on the input data. We used vectorization
 techniques in the convolution and pooling layers where we
@@ -90,6 +93,10 @@ resource node can be used to define a policy.
 Raspberry pies also have a limited amount of memory. So
 the memory consumption also needs to be considered in the
 offloading decisions.
+
+<img src="images/table.png" width="250" height="200">
+
+<img src="images/equation.png" width="250" height="50">
 
 ## Experiment Setup and Implementation
 
