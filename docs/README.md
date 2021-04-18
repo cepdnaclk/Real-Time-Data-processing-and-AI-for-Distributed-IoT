@@ -87,11 +87,76 @@ outputs and merges all outputs from each mapper. For this approach computers wit
 high computation power are used. In this work clusters consist of low computation power
 nodes.
 
+#### Top Down based approach
+Basically in top down approach the AI model is trained or developed at the cloud
+computing level using the high computational resources.Then the model is deployed to
+the edge devices.There are various techniques used in the scenarios. The whole process
+can be considered as a tree like structure. Root is considered as the central cloud and
+the leaves of the tree are the edge devices. A technique to look at the AI application
+built is that it is considered as the Cognitive Processing Elements(CPE). Then build a
+chain of CPE. A CPE is operated in basic four phases:
+• Discover phase
+• Deploy phase
+• Operate phase
+• Retain phase
+Basically in the discovery phase the basic idea is to develop the model using automated
+or user defined technique. In some scenarios multiple models might be generated and
+there should be methods to decide and select the best models out of those. After the
+model is developed they should be added into edges using the Deploy phase. Here the
+model is packed into docker containers and placed in a shared repository. Therefore edges
+can access that particular repository. Above mentioned chain of CPE is implemented as
+a Node-Red flow.
+
+Under the operation phase microservices are implemented on edges which are respon-
+sible for instantiating the chain of CPE flow. Docker containers in the shared repository
+will be executed at the edges by their microservices. Retaining phase is designed such
+that feedback mechanisms will be provided towards the cloud and then models can be
+updated in the cloud computing level.
+This top down approach uses high computational resources available at the cloud
+level and then deploys the models to edges. In contrast what we propose is to use the
+limited resources available at the edges, so our solution is a bottom up approach.
+
+#### Vectorization
+There are different types of approaches that have been taken to improve the performance
+of CNNs. Some are pruning, quantization and vectorization. Pruning removes the
+number of connections of a CNN. This method weakens the CNN as some weights are
+removed in this process. In quantization approach word length of weights and activations
+are reduced. FFT based convolution and Winograd convolution are some other approaches
+which improve the CNN performance. In FFT convolution operations perform in
+frequency domain. This method is suitable for larger filter sizes. For the FFT based
+convolution additional transformations are required which is a down side of a FFT
+convolution. Winograd Convolution also involves the transformation of input matrices
+and kernel matrices to perform the convolution. In vectorization approach input
+matrices and kernels are transformed inorder to perform the matrix multiplication which
+improves the performance of the convolutional operations. As the input matrices
+and kernels are transformed this method requires more memory.
+
+#### Computation offloading
+There are different studies involved in computation offloading. In offloading process
+computation is immigrated to the resourceful server or device from the limited resource
+device. This migration involves communication delays and energy consumptions so
+in order to perform the migration need to make decisions. Different approaches are
+proposed in different studies for this scenario. Some are Q learning based approaches,
+linear programming based approaches, and approaches based on defining cost functions
+for the transmission delays.
+Q learning based implementation requires additional computation power in order
+to make the decisions. Linear programming and cost function approaches transmission
+time and energy consumption for each convolution layer need be calculated before the
+decision making process. Which is an additional overhead for the decision making process.
+Simple policy based approach is discussed in these papers. By defining a simple
+policy, limited resource devices can make decisions based on the computation time and
+the transmission delays. The calculation of the computation time of the convolution
+operation using CPI gives some disadvantages. As the different devices have different
+CPIs with different pipelines and different architectures. GFLOPs base approach gives
+the advantage over the CPI methods as the manufacturers provide the information of
+the GFLOPs of the devices.
+
+
 ## Methodology
 
 #### Vectorization using im2col technique
 
-<img src="images/m1.png" width="250" height="200">
+<img src="images/m1.png" width="400" height="200">
 
 When consider the CNN network, the major operations are,
 • Convolutional operation
@@ -114,7 +179,7 @@ kernel matrix which is reshaped into row matrices. For the pooling operation the
 procedure is used where for a given kernel shape input matrix is reshaped and gets the
 output which depends on whether max pooling or average pooling.
 
-<img src="images/m2.png" width="250" height="200">
+<img src="images/m2.png" width="500" height="200">
 
 
 #### Computation Offloading
@@ -129,7 +194,7 @@ we defined a policy to determine whether to offload or execute locally.
 
 <img src="images/m3.png" width="250" height="200">
 
-<img src="images/m4.png" width="250" height="200">
+<img src="images/m4.png" width="400" height="40">
 
 We compute the amount of computation using the number of floating point operations
 and GFLOPs of the executing device. When multiplying to vectors of n elements there
@@ -138,7 +203,7 @@ computation time. Then we use equation (3.3) with the communications delays to
 determine the offloading decisions. As these IoT devices (Raspberry pies) have limited
 amounts of memory we also considered the memory usage.
 
-<img src="images/m5.png" width="250" height="200">
+<img src="images/m5.png" width="400" height="40">
 
 As shown in the equation (3.4), given a threshold value, we computed the memory
 usage of the operation and if the above equation satisfies then we offload the computation
@@ -168,7 +233,7 @@ For the pooling layers we distribute the input matrix between the available node
 and perform the pooling operation. As shown in the figure 4.1 the master gets the input
 image and it distributes the computation among the slave nodes.
 
-<img src="images/FYPdiagram.png" width="250" height="200">
+<img src="images/FYPdiagram.png" width="550" height="400">
 Figure 4.1
 
 Master acts as a client where the slave nodes act as servers. So we use client server
@@ -199,8 +264,10 @@ data division for the Federated learning
 ## Results and Analysis
 
 #### Results
+
 The Darknet’s different YOLO versions were instatiated on a single Raspberry Pi node.
-<img src="images/res1.png" width="250" height="200">
+
+<img src="images/res1.png" width="250" height="100">
 
 The Segmentation faults occur when the program tries to access memory beyond its
 reach. That implies Darknet’s YOLO is computationally excessive for Raspberry Pi
@@ -210,17 +277,19 @@ not complete its task.
 Then our custom YOLO implementation was tested on single node with Map reduced
 version on multiple nodes.
 
-<img src="images/res.png" width="250" height="200">
+<img src="images/res.png" width="250" height="100">
 
 The distribution of computation with multiple nodes reduces execution time. After
 the computation is divided among the cluster nodes using the Map Reduce techniques,
 we used multi threads to utilize the resources.The computation is parallized within the
 cores of each device.
+
 <img src="images/res3.png" width="250" height="200">
 
 Here a variation of total execution time can be seen with respect to the number of
 threads. Therefore to find the optimal number of number of threads the results were
 tabulated.
+
 <img src="images/res4.png" width="250" height="200">
 Fig. 5.1 Number of threads Vs the Total execution time
 
@@ -229,11 +298,13 @@ the execution time increases, because the synchronization overhead happens in a 
 cores available environment. According to the diagram the optimal number of threads
 per node is 10. Then the optimized code was compared with the same algorithm tested
 on Cloud with very high resources.
+
 <img src="images/res5.png" width="250" height="200">
 
 The resource utilization with multi threads was combined with the vectorization
 approach and measured the performance gain in the distributed computation in raspberry
 Pi.
+
 <img src="images/res6.png" width="250" height="200">
 Fig. 5.2 Total execution time vs input size for Pymp multi threads and vectorization
 with OpenBLAS optimization.
@@ -248,7 +319,8 @@ computation time is calculated using the GFLOPs in the given device. For the amo
 of computation, the number of floating point operations in the given convolution is
 considered and then it divided by the GFLOPs of the device. Fig. 5.3 shows the results
 of the estimation with actual time.
-<img src="images/res7.png" width="250" height="200">
+
+<img src="images/res7.png" width="300" height="200">
 Fig. 5.3 Actual processing time vs Estimated processing time with the varying channel
 size.Input matrix (64, 64, channels) with kernel shape (9, 9,channels, 256).
 
@@ -262,7 +334,7 @@ environment like Google Colab Cloud. Also, This custom YOLO implementation can
 be run on a single raspberry Pi board but the time for execution is comparatively high.
 The custom implementation was focused on the core CNN computation of YOLO. In the Cloud environment, the GPU and CPU which have capabilities up to 12 GB YOLO perform in separate efficiency. We ran our custom optimized YOLO algorithm in the High computationally capable CPU and GPU.
 
-<img src="images/a1.png" width="250" height="200">
+<img src="images/a1.png" width="300" height="60">
 
 Our YOLO Object detection algorithm performs nearly 9 times better than in
 GPU enabled cloud than Raspberry Pi. At the next instance, we implemented the
@@ -275,7 +347,7 @@ deployed our YOLO implementation which consists of the optimized CNN and perform
 the tasks with the very constrained and resource-limited environment of the Raspberry
 Pi.
 
-<img src="images/a2.png" width="250" height="200">
+<img src="images/a2.png" width="300" height="60">
 
 The reason YOLO performs better at the Colab Cloud is that Colab Loud provides
 around 24 times better Computational resources compared to a single edge Raspberry Pi.
@@ -283,7 +355,7 @@ But our implementation of YOLO with the optimized CNN performed within around
 270.51 seconds even in the very resource-constrained environment. Further, the optimized
 YOLO algorithm was distributed to two parallel Raspberry Pis.
 
-<img src="images/a3.png" width="250" height="200">
+<img src="images/a3.png" width="300" height="60">
 
 With the parallel implementation, the Execution time is reduced nearly by a factor
 of two. This parallel implementation which distributes the computation among the Edge
@@ -295,7 +367,7 @@ of threads per raspberry pi node was 10. With the optimal number of threads appl
 with the distributed computation using Map reduce we achieved the total execution time
 to 41.74 seconds.
 
-<img src="images/a4.png" width="250" height="200">
+<img src="images/a4.png" width="300" height="60">
 
 We could achieve nearly the same performance at edge when we apply distributed
 computing together with optimization using multi threads. Furthermore we applied
@@ -307,7 +379,7 @@ the OpenBLAS, an optimized Basic Linear Algebra Subprograms library. From Fig Fi
 OpenBLAS is less than multi threading with PyMP implementation. Therefore we used
 vectorization with OpenBLAS for the core CNN computation of YOLO to enable real
 time computations.
-<img src="images/a5.png" width="250" height="200">
+<img src="images/a5.png" width="300" height="200">
 
 As previously explained we use the policy defined by the equation (3.3) to make the
 offloading decisions. For that we needed to calculate the execution time on the raspberry
@@ -321,7 +393,7 @@ implementation.For the input matrix (64,64, channels) with the kernel shape (3,3
 nels,256). There is a high improvement with the vectorization. When consider the
 channel size of 128,
 
-<img src="images/a6.png" width="250" height="200">
+<img src="images/a6.png" width="250" height="60">
 
 Vectorization improved the convolution operation by a factor of 85.
 
