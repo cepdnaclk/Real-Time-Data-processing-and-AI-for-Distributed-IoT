@@ -60,49 +60,293 @@ techniques.
 
 ## Related works
 
+#### Use of Map Reduce to distribute the computation
+The distribution of computation can be categorised basically under three main scenarios:
+• When the training data is large.
+• When data to be classified is large.
+• When the Neural network consists of a huge number of nodes.
+When the training data set is larger training data has to be divided using mapper function
+is Map reduce. Because training a huge volume of data costs high computational
+resources as well as a high amount of time. So different sets of data will be provided to
+each node in the cluster and the whole portion of data to be classified will be provided to
+every node, because the volume of data to be classified is small compared to the volume of
+training data. When each node in the cluster is trained with different chunks of training
+data. That will generate different AI models at the different nodes of the cluster. So
+federated learning techniques should be used in order to define the suitable training
+model out of the different models that will be generated.
+When data to be classified is huge that particular data will be distributed to all the
+nodes using the mapper function. For each node in the cluster the same chunk of training
+data will be provided because the training data is small compared to data to be classified
+in this scenario. Each node will generate its output and the reducer function will make
+the final output from all of these results.
+When the neural network consists of a large number of neurons, computation cost
+increases. So using map reduce the neural network can be distributed over multiple
+nodes. There are a number of iterations involved with the feedforward process while
+the backpropagation is done in the last iteration. In each iteration reducer collects the
+outputs and merges all outputs from each mapper. For this approach computers with
+high computation power are used. In this work clusters consist of low computation power
+nodes.
+
 ## Methodology
 
-#### Im2col Technique
+#### Vectorization using im2col technique
 
-<img src="images/vec.png" width="250" height="200">
+<img src="images/m1.png" width="250" height="200">
 
-In vectorization input matrices transform into a vector
-representation where it enables the vector operations instead of scalar operations on the input data. We used vectorization
-techniques in the convolution and pooling layers where we
-use im2col technique to implement the vectorization. As
-shown in figure 1 given the input matrix we take each window
-and flatten them as columns and stack them as columns in a
-matrix. Kernels are reshaped into rows then apply the matrix
-multiplication between the row and column matrices.
+When consider the CNN network, the major operations are,
+• Convolutional operation
+• Pooling operation
+
+In convolution operation, the input matrix is multiplied by the kernel. As shown in figure
+3.2 the kernel needs to move through the whole input matrix based on the given stride
+which defines how many columns or rows the kernel should move next. To move the
+kernel through the whole matrix consumes time which slows down the operation. Im2col
+technique can be used to overcome this problem which basically removes the need of
+moving the kernel through the whole input matrix. We represent input matrices and
+kernels using numpy matrices. So the implementation of the im2col technique is done
+using the numpy strides. Which gave the ability to reshape the matrices in order to do
+the convolution operation in a vectorized manner.
+Using numpy strides each receptive field is turned into a column. As shown in the
+figure 1.1 2x2 receptive field is converted to a column matrix and each kernel is reshaped
+into a row matrix. Figure 3.3 shows the converted input matrix where each receptive
+field is stacked side by side in a single matrix, Then the output is multiplied by the
+kernel matrix which is reshaped into row matrices. For the pooling operation the same
+procedure is used where for a given kernel shape input matrix is reshaped and gets the
+output which depends on whether max pooling or average pooling.
+
+<img src="images/m2.png" width="250" height="200">
+
 
 #### Computation Offloading
-Even though the horizontal distribution of computation
-improves the performance, sometimes it may not be enough to
-address the real time constraints. Servers have more resources
-than the raspberry pi devices. So instead of doing the computa-
-tion with limited resources, computation migration can be used
-to address the real time constraints. In vertical distribution,
-servers can execute the given task much faster than the limited
-resource device. Even though there is an overhead in the
-communication between the server and the node. Policies can
-be used to determine whether to offload the computation or
-perform the computation locally. Network bandwidth, node
-processing power and server processing power and the amount
-of data that transfer between the server node and limited
-resource node can be used to define a policy.
-Raspberry pies also have a limited amount of memory. So
-the memory consumption also needs to be considered in the
-offloading decisions.
 
-<img src="images/table.png" width="250" height="200">
+Most of the IoT devices have limited resources compared to the cloud. When it comes
+to the AI and ML processing it requires more computation power and resources. Even
+though the computation distribution, vectorization and parallelization techniques apply
+some times it may not give the maximum benefits. We used offloading techniques to get
+the advantage of more resource full servers.We compared the execution time in raspberry
+pis with the execution time on the server and the communication delays based on that
+we defined a policy to determine whether to offload or execute locally.
 
-<img src="images/equation.png" width="250" height="50">
+<img src="images/m3.png" width="250" height="200">
+
+<img src="images/m4.png" width="250" height="200">
+
+We compute the amount of computation using the number of floating point operations
+and GFLOPs of the executing device. When multiplying to vectors of n elements there
+involves 2n-1 arithmetic operations, then we divided it by the GFLOPs and compute
+computation time. Then we use equation (3.3) with the communications delays to
+determine the offloading decisions. As these IoT devices (Raspberry pies) have limited
+amounts of memory we also considered the memory usage.
+
+<img src="images/m5.png" width="250" height="200">
+
+As shown in the equation (3.4), given a threshold value, we computed the memory
+usage of the operation and if the above equation satisfies then we offload the computation
+to the upper layers.
 
 ## Experiment Setup and Implementation
+#### Prototype
+
+In this work we choose object detection as our use case which needs high computation
+power for the training and prediction phases. Raspberry pis are used as the end devices,
+Which runs the YOLO algorithm. YOLO algorithm is based on convolutional neural
+networks. Given an image, it feeds to an convolutional network and get an output based
+on partitioning make on the image and number class. Figure 4.1 shows a input and output
+example where 600x600x3 input is feed into the CNN where output is 19x19x425.In this
+example number of predicting classes are 80 while 5 anchor boxes are used for each grid
+cell.
+The convolutional neural network consists of multiple filters in each layer so
+by dividing kernels among multiple raspberry pis, the computation can be distributed
+and parallelized. After computation done parallely then the output is merged and
+forward to the next layer. We use the kernels with the shape of (h, w, nCprev, nC) where
+the h and w represent the height and the width and the nCprev represent the number of
+channels of the input matrix and the nC represent the number of kernel of the shape
+of (h ,w, nCprev). So the computation distribution we partition the nCprev depending
+on the available nodes and then perform the convolution on the input matrix and then
+combine the each output of the each node.
+For the pooling layers we distribute the input matrix between the available nodes
+and perform the pooling operation. As shown in the figure 4.1 the master gets the input
+image and it distributes the computation among the slave nodes.
+
+<img src="images/FYPdiagram.png" width="250" height="200">
+Figure 4.1
+
+Master acts as a client where the slave nodes act as servers. So we use client server
+architecture to communicate between the slave nodes and the master nodes. Server nodes
+are always listening to the incoming data , when the master node receives an image
+then it distributes the computation to the slave nodes which are always listening for the
+requests.
+For convolution operations each node uses vectorization techniques and parallelization
+techniques. For matrix implementation we used numpy matrices. For the vectorization
+we used im2col technique and we got the advantage of numpy strides to manipulate the
+matrices in order to perform the convolution operations in a vectorized manner.
+Federated learning methods are used for the training network and object detection,
+Where each raspberry pi or a raspberry pi cluster trains a model based on local data and
+then the learned parameters are sent to higher layers (Fog, ROOF). Then the aggregation
+done on that layer to train a global model.
+For the data set we used We randomly captured these images of different scenes at
+different times from 26 street monitoring videos with 704×576 pixels. Eventually, we
+select a total of 2,544 items from these images with 7 object categories. Each image has
+at least one labeled object, and may have multiple labels of this same category in one
+image. The object labels are basket, carton, chair ,electromobile, gas tank,sunshade and
+table.
+while training YOLOv3 was via Adam with an initialization learning rate of 1e-3.
+We adapt the original Federated Averaging (FedAvg) algorithm to framework, we
+modified FedAvg algorithm to a pseudo FedAvg algorithm because there is an effect of
+data division for the Federated learning
+
 
 ## Results and Analysis
 
+#### Results
+The Darknet’s different YOLO versions were instatiated on a single Raspberry Pi node.
+<img src="images/res1.png" width="250" height="200">
+
+The Segmentation faults occur when the program tries to access memory beyond its
+reach. That implies Darknet’s YOLO is computationally excessive for Raspberry Pi
+devices. Also YOLOv3 stops at calculating weights while Tiny YOLOv3 stops at CNN.
+Which shows optimized version can do better computation, but even Tiny YOLO can
+not complete its task.
+Then our custom YOLO implementation was tested on single node with Map reduced
+version on multiple nodes.
+
+<img src="images/res.png" width="250" height="200">
+
+The distribution of computation with multiple nodes reduces execution time. After
+the computation is divided among the cluster nodes using the Map Reduce techniques,
+we used multi threads to utilize the resources.The computation is parallized within the
+cores of each device.
+<img src="images/res3.png" width="250" height="200">
+
+Here a variation of total execution time can be seen with respect to the number of
+threads. Therefore to find the optimal number of number of threads the results were
+tabulated.
+<img src="images/res4.png" width="250" height="200">
+Fig. 5.1 Number of threads Vs the Total execution time
+
+Here increasing the number of threads reduces the execution time. But after a point
+the execution time increases, because the synchronization overhead happens in a limited
+cores available environment. According to the diagram the optimal number of threads
+per node is 10. Then the optimized code was compared with the same algorithm tested
+on Cloud with very high resources.
+<img src="images/res5.png" width="250" height="200">
+
+The resource utilization with multi threads was combined with the vectorization
+approach and measured the performance gain in the distributed computation in raspberry
+Pi.
+<img src="images/res6.png" width="250" height="200">
+Fig. 5.2 Total execution time vs input size for Pymp multi threads and vectorization
+with OpenBLAS optimization.
+
+From figure 5.2 ,with the increase of the input size, the total execution time for
+increases for both approaches. But for all the input sizes the vectorization optimized
+with OpenBLAS performs better than as it utilizes the resources efficiently.This approach
+further enables the real time computations.
+
+We used the equation (3.3) to make offloading decisions in the raspberry pi. The
+computation time is calculated using the GFLOPs in the given device. For the amount
+of computation, the number of floating point operations in the given convolution is
+considered and then it divided by the GFLOPs of the device. Fig. 5.3 shows the results
+of the estimation with actual time.
+<img src="images/res7.png" width="250" height="200">
+Fig. 5.3 Actual processing time vs Estimated processing time with the varying channel
+size.Input matrix (64, 64, channels) with kernel shape (9, 9,channels, 256).
+
+#### Analysis
+Based on the results it is evident that the object detection algorithm we choose, YOLO
+which has a complex Convolutional Neural Network cannot be run on a single raspberry
+pi 3 board due to resource constraints. Both Darknet’s YOLO and Tiny YOLO cannot
+perform their computations on a single Raspberry Pi board. We have implemented
+a custom YOLO to run on a less-resourced environment. In a High resource enabled
+environment like Google Colab Cloud. Also, This custom YOLO implementation can
+be run on a single raspberry Pi board but the time for execution is comparatively high.
+The custom implementation was focused on the core CNN computation of YOLO. In the Cloud environment, the GPU and CPU which have capabilities up to 12 GB YOLO perform in separate efficiency. We ran our custom optimized YOLO algorithm in the High computationally capable CPU and GPU.
+
+<img src="images/a1.png" width="250" height="200">
+
+Our YOLO Object detection algorithm performs nearly 9 times better than in
+GPU enabled cloud than Raspberry Pi. At the next instance, we implemented the
+optimized algorithm in distributed cluster of Raspberry Pi nodes. Here we distributed
+the computation to a cluster of two raspberry pi nodes. When the execution time in the
+Colab cloud is compared with execution time is any raspberry Pi implementation Colab
+cloud performs well. Because of the availability of high computational resources. But
+the goal is to perform the complex CNN operations at the edge. So we have successfully
+deployed our YOLO implementation which consists of the optimized CNN and performed
+the tasks with the very constrained and resource-limited environment of the Raspberry
+Pi.
+
+<img src="images/a2.png" width="250" height="200">
+
+The reason YOLO performs better at the Colab Cloud is that Colab Loud provides
+around 24 times better Computational resources compared to a single edge Raspberry Pi.
+But our implementation of YOLO with the optimized CNN performed within around
+270.51 seconds even in the very resource-constrained environment. Further, the optimized
+YOLO algorithm was distributed to two parallel Raspberry Pis.
+
+<img src="images/a3.png" width="250" height="200">
+
+With the parallel implementation, the Execution time is reduced nearly by a factor
+of two. This parallel implementation which distributes the computation among the Edge
+nodes performs better even with the very constrained and limited resources available at the
+edge devices. For further optimization, we used multi-threads to perform computation
+utilizing each raspberry pi cores. To find the optimal number of threads to use we
+tabulated the number of threads vs total execution time in Fig 5.1. The optimal number
+of threads per raspberry pi node was 10. With the optimal number of threads applied
+with the distributed computation using Map reduce we achieved the total execution time
+to 41.74 seconds.
+
+<img src="images/a4.png" width="250" height="200">
+
+We could achieve nearly the same performance at edge when we apply distributed
+computing together with optimization using multi threads. Furthermore we applied
+vectorization for CNN which also improves the performance. Then to combine both
+of these optimization techniques we used multi threads upon vectorized CNN. Here to
+enable multi core resource utilization on raspberry pi when using vectorization, we used
+the OpenBLAS, an optimized Basic Linear Algebra Subprograms library. From Fig Fig
+5.2 we can see that for any given input size the execution time for vectorization with
+OpenBLAS is less than multi threading with PyMP implementation. Therefore we used
+vectorization with OpenBLAS for the core CNN computation of YOLO to enable real
+time computations.
+<img src="images/a5.png" width="250" height="200">
+
+As previously explained we use the policy defined by the equation (3.3) to make the
+offloading decisions. For that we needed to calculate the execution time on the raspberry
+pis. We used GFLOPs based approach with the number of floating point operations to
+calculate the execution time. Figure 5.3 shows the execution time with different input
+matrices. Estimated times are shown in the red columns, when compare with the actual
+execution time our GFLOPs based method was able to estimate the execution time close
+to the actual execution time.
+Table 5.1 shows the vectorized convolution execution time with the non vectorized
+implementation.For the input matrix (64,64, channels) with the kernel shape (3,3,chan-
+nels,256). There is a high improvement with the vectorization. When consider the
+channel size of 128,
+
+<img src="images/a6.png" width="250" height="200">
+
+Vectorization improved the convolution operation by a factor of 85.
+
+
 ## Conclusion
+The aim of the project is to enable real time processing at the edge with limited
+resources.So with combining above mentioned techniques, real time processing at the
+edge is achievable. In this study we have developed a distributed CNN using map reduce
+which can be used to implement YOLO.Furthermore, we propose a novel approach where
+end devices consisting limited resources can train and generate real time decision in
+distributed manner, where their computations are distributed among other multiple
+nodes or offload the computation to the upper layer when the resources run out. We
+have distributed the CNN over multiple Raspberry Pis.The performance of the CNN has
+been measured under different conditions and platforms. Based on the results it can be
+concluded that by distributing CNN over multiple nodes the computation latency can be
+reduced.Then we optimized our implementation using vectorization and multi threads
+together so the execution time is reduced further enabling the real time computations
+using limited resources.
+Offloading decisions were taken using a policy where the computation time and
+network transmissions delays were considered. Also we considered the memory usage for
+the computation which also affected the offloading decisions. We also apply federated
+learning to train a global model where each device is able to train a local model which
+addresses the privacy issues. These techniques provide the path to achieve better results
+using limited resource devices.
+
 
 ## Publications
 1. [Semester 7 report](./)
