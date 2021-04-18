@@ -422,10 +422,10 @@ using limited resource devices.
 
 
 ## Publications
-1. [Semester 7 report](./)
-2. [Semester 7 slides](./)
-3. [Semester 8 report](./)
-4. [Semester 8 slides](./)
+1. [Semester 7 report](./data/sem7report.pdf)
+2. [Semester 7 slides](./data/sem7presentation.pdf)
+3. [Semester 8 report](./data/Semester8.pdf)
+4. [Semester 8 slides](./data/Sem8Presentation.pdf)
 5. Author 1, Author 2 and Author 3 "Research paper title" (2021). [PDF](./).
 
 
