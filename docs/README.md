@@ -379,6 +379,7 @@ the OpenBLAS, an optimized Basic Linear Algebra Subprograms library. From Fig Fi
 OpenBLAS is less than multi threading with PyMP implementation. Therefore we used
 vectorization with OpenBLAS for the core CNN computation of YOLO to enable real
 time computations.
+
 <img src="images/a5.png" width="300" height="200">
 
 As previously explained we use the policy defined by the equation (3.3) to make the
