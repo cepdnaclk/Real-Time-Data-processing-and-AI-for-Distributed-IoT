@@ -1,3 +1,3 @@
-## Please refer the instructions in below URL:
+## Real Time Data processing and AI for Distributed IoT
 
-https://projects.ce.pdn.ac.lk/docs/how-to-add-a-project
+
