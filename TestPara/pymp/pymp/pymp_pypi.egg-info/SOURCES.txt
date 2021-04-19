@@ -1,0 +1,12 @@
+README.md
+setup.cfg
+setup.py
+pymp/__init__.py
+pymp/config.py
+pymp/shared.py
+pymp_pypi.egg-info/PKG-INFO
+pymp_pypi.egg-info/SOURCES.txt
+pymp_pypi.egg-info/dependency_links.txt
+pymp_pypi.egg-info/top_level.txt
+tests/__init__.py
+tests/unittests.py
