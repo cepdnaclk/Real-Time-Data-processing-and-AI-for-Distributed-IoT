@@ -181,6 +181,21 @@ output which depends on whether max pooling or average pooling.
 
 <img src="images/m2.png" width="500" height="200">
 
+#### Multi threads for computation
+
+Raspberry pi have four cores,so any computation in a raspberry pi can be utilized to compute using all the four cores.Quad core device contains four cores.Here
+multi threads can be applied on the computational costly parts like OpenMP but available only for C,C++ and FORTRAN.
+But Python Global Interpreter Lock lets only one thread at a time to be executed.
+As OpenMP can create threads on C ,Cython converts to a separate executed c file but again the code conversion is expensive.
+
+<img src="images/Pymp_01_reference.png" width="250" height="200">
+
+Therefore we use PyMP . It uses the Fork and join model enabling use of multiple threads. Using PyMP most computationally costly parts of the algorithm is executed parallel using threads to utilize the four available cores within a raspberry pi node. While the rest of the algorithm is executed sequentially. While the threads make certain parts of the convolutional network the shared variables of certain threads should be considered. Assigning too many threads causes overhead . Therefore optimal number of threads should be assigned. The most computationally costly parts of the YOLO algorithm are selected and then different number of threads were applied. Then the optimal number of threads were selected by measuring the best execution time.
+
+<img src="images/NodeDis.png" width="250" height="200">
+
+#### Vectorization with multi threads
+When we combine the two approaches used to optimize the computations we had to use multi threads to compute vectorized CNN computations. Here we used an optimized BLAS library. So vectorized CNN will be performed using multi threads in OpenBLAS.This methodology combines both resource utilization using multi threads and performance improvement using vectorization techniques together which we used for the optimization.
 
 #### Computation Offloading
 
@@ -208,6 +223,12 @@ amounts of memory we also considered the memory usage.
 As shown in the equation (3.4), given a threshold value, we computed the memory
 usage of the operation and if the above equation satisfies then we offload the computation
 to the upper layers.
+
+#### Federated Learning
+
+The main advantage of the Federated learning is, it helps to train a model while preserving the privacy of the model data. In here  model is train though model aggregation other than data aggression by keeping the local data private (within the local device )
+Since all the data is collected from an edge device, this is a better approach for doing computer vision tasks. Because all the annotations are done on the edge devices but the model parameters are aggregated in a central cloud server.
+This method ensures the privacy of the users. Once the model parameters are aggregated, then the global model is pushed to the user’s devices. So there is low latency in the predictions. As this is going to be a collaborative training process, the model gets smarter over time.
 
 ## Experiment Setup and Implementation
 #### Prototype
