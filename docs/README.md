@@ -125,6 +125,13 @@ As OpenMP can create threads on C ,Cython converts to a separate executed c file
 
 <img src="images/Pymp_01_reference.png" width="250" height="200">
 
+Therefore we use PyMP . It uses the Fork and join model enabling use of multiple threads. Using PyMP most computationally costly parts of the algorithm is executed parallel using threads to utilize the four available cores within a raspberry pi node. While the rest of the algorithm is executed sequentially. While the threads make certain parts of the convolutional network the shared variables of certain threads should be considered. Assigning too many threads causes overhead . Therefore optimal number of threads should be assigned. The most computationally costly parts of the YOLO algorithm are selected and then different number of threads were applied. Then the optimal number of threads were selected by measuring the best execution time.
+
+<img src="images/NodeDis.png" width="250" height="200">
+
+#### Vectorization with multi threads
+When we combine the two approaches used to optimize the computations we had to use multi threads to compute vectorized CNN computations. Here we used an optimized BLAS library. So vectorized CNN will be performed using multi threads in OpenBLAS.This methodology combines both resource utilization using multi threads and performance improvement using vectorization techniques together which we used for the optimization.
+
 #### Computation Offloading
 
 Most of the IoT devices have limited resources compared to the cloud. When it comes
