@@ -123,7 +123,7 @@ multi threads can be applied on the computational costly parts like OpenMP but a
 But Python Global Interpreter Lock lets only one thread at a time to be executed.
 As OpenMP can create threads on C ,Cython converts to a separate executed c file but again the code conversion is expensive.
 
-
+<img src="images/Pymp_01_reference.png" width="250" height="200">
 
 #### Computation Offloading
 
