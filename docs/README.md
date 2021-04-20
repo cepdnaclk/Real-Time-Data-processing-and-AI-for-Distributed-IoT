@@ -159,6 +159,12 @@ As shown in the equation (3.4), given a threshold value, we computed the memory
 usage of the operation and if the above equation satisfies then we offload the computation
 to the upper layers.
 
+#### Federated Learning
+
+The main advantage of the Federated learning is, it helps to train a model while preserving the privacy of the model data. In here  model is train though model aggregation other than data aggression by keeping the local data private (within the local device )
+Since all the data is collected from an edge device, this is a better approach for doing computer vision tasks. Because all the annotations are done on the edge devices but the model parameters are aggregated in a central cloud server.
+This method ensures the privacy of the users. Once the model parameters are aggregated, then the global model is pushed to the user’s devices. So there is low latency in the predictions. As this is going to be a collaborative training process, the model gets smarter over time.
+
 ## Experiment Setup and Implementation
 #### Prototype
 
