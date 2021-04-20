@@ -116,6 +116,14 @@ output which depends on whether max pooling or average pooling.
 
 <img src="images/m2.png" width="250" height="200">
 
+#### Multi threads for computation
+
+Raspberry pi have four cores,so any computation in a raspberry pi can be utilized to compute using all the four cores.Quad core device contains four cores.Here
+multi threads can be applied on the computational costly parts like OpenMP but available only for C,C++ and FORTRAN.
+But Python Global Interpreter Lock lets only one thread at a time to be executed.
+As OpenMP can create threads on C ,Cython converts to a separate executed c file but again the code conversion is expensive.
+
+
 
 #### Computation Offloading
 
